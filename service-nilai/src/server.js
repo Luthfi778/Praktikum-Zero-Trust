@@ -1,0 +1,13 @@
+const express=require('express');
+const config=require('./config');
+const verifyGateway=require('./middleware/verifyGatewaySecret');
+const verifyToken=require('./middleware/verifyToken');
+const nilaiRoutes=require('./routes/nilai.routes');
+const kelasRoutes=require('./routes/kelas.routes');
+const app=express();
+app.use(express.json());
+app.get('/health',(req,res)=>res.json({service:'service-nilai',status:'ok'}));
+app.use(verifyGateway,verifyToken);
+app.use('/nilai',nilaiRoutes);
+app.use('/kelas',kelasRoutes);
+app.listen(config.PORT,()=>console.log(`Service Nilai berjalan di http://localhost:${config.PORT}`));

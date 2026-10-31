@@ -1,0 +1,12 @@
+{
+  "name": "sistem-nilai-zero-trust",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm i --prefix gateway && npm i --prefix service-nilai && npm i --prefix service-transkrip",
+    "seed": "node db/seed.js",
+    "start:gateway": "node gateway/src/server.js",
+    "start:nilai": "node service-nilai/src/server.js",
+    "start:transkrip": "node service-transkrip/src/server.js"
+  }
+}

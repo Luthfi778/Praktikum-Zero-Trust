@@ -1,0 +1,11 @@
+const express=require('express');
+const config=require('./config');
+const verifyGateway=require('./middleware/verifyGatewaySecret');
+const verifyToken=require('./middleware/verifyToken');
+const routes=require('./routes/transkrip.routes');
+const app=express();
+app.use(express.json());
+app.get('/health',(req,res)=>res.json({service:'service-transkrip',status:'ok'}));
+app.use(verifyGateway,verifyToken);
+app.use('/transkrip',routes);
+app.listen(config.PORT,()=>console.log(`Service Transkrip berjalan di http://localhost:${config.PORT}`));

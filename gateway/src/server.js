@@ -1,0 +1,15 @@
+const express = require('express');
+const config = require('./config');
+const authRoutes = require('./routes/auth.routes');
+const proxyRoutes = require('./routes/proxy.routes');
+const authenticate = require('./middleware/authenticate');
+const deviceCheck = require('./middleware/deviceCheck');
+const enforce = require('./middleware/enforce');
+const errorHandler = require('./middleware/errorHandler');
+const app = express();
+app.use(express.json());
+app.get('/health', (req,res)=>res.json({ service:'gateway', status:'ok' }));
+app.use('/auth', authRoutes);
+app.use(['/nilai','/kelas','/transkrip'], authenticate, deviceCheck, enforce, proxyRoutes);
+app.use(errorHandler);
+app.listen(config.PORT, ()=>console.log(`API Gateway berjalan di http://localhost:${config.PORT}`));

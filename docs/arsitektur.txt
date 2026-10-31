@@ -1,0 +1,27 @@
+ARSITEKTUR SISTEM NILAI - ZERO TRUST
+
+Client (Mahasiswa/Dosen/Admin)
+  | HTTPS/HTTP lokal + Bearer Access Token + X-Device-ID
+  v
+API Gateway :3000 (Policy Enforcement Point / PEP)
+  |-- /auth/* : login, refresh, logout, token service
+  |-- Authentication middleware: verifikasi JWT
+  |-- Device verification: cocokkan user_id dan device_id di database
+  |-- Policy Engine: role, kepemilikan resource, status final, jam akses
+  |-- Audit Service: catat allow/deny beserta alasan
+  |
+  |-- /nilai/* dan /kelas/* -- X-Gateway-Secret + JWT --> Service Nilai :3001
+  |                                                       |
+  |                                                       | finalisasi meminta token service ke Gateway
+  |                                                       v
+  |<------------------- /auth/service --------------------|
+  |                                                       |
+  |<--- POST /transkrip/sinkron + token service -----------|
+  |                                                       v
+  |-- /transkrip/* -- X-Gateway-Secret + JWT --> Service Transkrip :3002
+                                                      |
+                                                      v
+                                               SQLite bersama
+
+Gateway adalah satu-satunya pintu masuk bagi client. Kedua service tetap memeriksa gateway secret dan tanda tangan/masa berlaku JWT, sehingga secret saja atau
+token saja tidak cukup untuk melewati service. Token service hanya diizinkan untuk endpoint sinkronisasi transkrip.

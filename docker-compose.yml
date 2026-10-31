@@ -1,0 +1,15 @@
+# Opsional - lengkapi bila ingin memakai Docker
+services:
+  gateway:
+    build: ./gateway
+    ports: ["3000:3000"]
+    env_file: .env
+    volumes: ["./db:/app/db"]
+  service-nilai:
+    build: ./service-nilai
+    env_file: .env
+    volumes: ["./db:/app/db"]
+  service-transkrip:
+    build: ./service-transkrip
+    env_file: .env
+    volumes: ["./db:/app/db"]
